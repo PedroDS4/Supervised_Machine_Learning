@@ -54,8 +54,9 @@ $$
 Calculando o gradiente
 
 $$
-∇J_{a} = \frac{\partial }{\partial a}\frac{ \sum_{i = 0}^{N}(y_i - f(x_i,a,b))^2}{N}
+\nabla J_{a} = \frac{\partial }{\partial a}\frac{ \sum_{i = 0}^{N}(y_i - f(x_i,a,b))^2}{N}
 $$
+
 Utilizando que a derivada da soma é a soma das derivadas, temos
 
 $$
