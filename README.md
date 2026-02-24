@@ -1,4 +1,4 @@
-# **Aprendizado Supervisionado**
+# **Regressão Linear**
 Este repositório contempla projetos de aprendizado supervisionado para praticar o aprendizado de redes neurais.
 
 #**Aprendizado Supervisionado por Gradiente Descendente**
