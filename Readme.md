@@ -25,13 +25,13 @@ Derivations, loss functions, and training dynamics are explored explicitly.
 
 Example formulation:
 
-\[
+$$
 \hat{y} = W x + b
-\]
+$$
 
-\[
+$$
 \theta_{k+1} = \theta_k - \eta \nabla J(\theta_k)
-\]
+$$
 
 ---
 
