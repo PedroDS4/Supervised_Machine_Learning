@@ -1,252 +1,200 @@
-# **Regressão Linear**
-Este repositório contempla projetos de aprendizado supervisionado para praticar o aprendizado de redes neurais.
+# Linear Regression and Gradient-Based Supervised Learning
 
-#**Aprendizado Supervisionado por Gradiente Descendente**
-Um clássico problema na literatura matemática é o problema de um ajuste de curva a partir de pontos experimentais de um certo experimento físico, onde é requerido um modelo capaz de melhor se ajustar ao formato dos pontos.
-Considere agora o seguinte problema onde temos os pontos de entrada de um sistema, e também os pontos de saída, então.
+This repository presents supervised learning projects developed to study and implement neural network training from first principles, with emphasis on gradient-based optimization methods.
 
-$$
-(x_i, y_i) ∀  i  ɛ [1,n]
-$$
+---
 
-e queremos obter um modelo que melhor mapeie $x$ em $y$, então
+# Supervised Learning via Gradient Descent
 
-$$
-f(x) = y
-$$
+A classical problem in applied mathematics and engineering is the curve-fitting problem, in which a model must be adjusted to approximate experimental observations obtained from a physical system.
 
-Para fazer isso, definimos uma função que meça o erro entre o modelo e os dados experimentais, uma função de custo bastante comum é o erro médio quadrático entre as variáveis, dado por
+Consider a dataset composed of input-output pairs:
 
 $$
-MSE = \frac{ \sum_{i = 0}^{N}|y_i - f(x_i)|^2}{N}
+(x_i, y_i), \quad i = 1, \dots, N
 $$
 
-Essa função é chamada de função de custo, e podemos minimizá-la em função dos parâmetros do modelo $$ f(x_i,z_1,z_2,z_3,...,z_l) $$
-Então a estratégia utilizada é calcular o gradiente da função de custo
+The objective is to determine a model $f$ such that
 
 $$
-J = \frac{ \sum_{i = 0}^{N}|y_i - f(x_i,z_1,z_2,z_3,...,z_l)|^2}{N}
+f(x_i) \approx y_i
 $$
 
-para obter a minimização do erro e ajustar os parâmetros do modelo, ao mesmo tempo, então temos
+To quantify the discrepancy between predictions and observed data, we define a cost function. A widely used choice is the Mean Squared Error (MSE), given by
 
 $$
-∇J(z_1,z_2,z_3,...,z_l) = ∇\frac{ \sum_{i = 0}^{N}|y_i - f(x_i,z_1,z_2,z_3,...,z_l)|^2}{N}
+J = \frac{1}{N} \sum_{i=1}^{N} \left( y_i - f(x_i) \right)^2
 $$
 
-e os parâmetros podem ser estimados iterativamente, como segue pela equação abaixo
+The learning problem consists of minimizing $J$ with respect to the model parameters. If the model depends on parameters $z_1, z_2, \dots, z_\ell$, we write:
 
 $$
-z_i[k+1] = z_i[k] - μ∇J_{z_i}
+J(z_1, z_2, \dots, z_\ell) = 
+\frac{1}{N} \sum_{i=1}^{N} 
+\left( y_i - f(x_i; z_1, z_2, \dots, z_\ell) \right)^2
 $$
 
-O sinal de $-$ significa um problema de minimização de uma função de custo, e essa equação pode ser enxergada como um aprendizado supervisionado de um parâmetro de um certo modelo, de acordo com a $k$-ésima época(ou geração) de evolução do algorítmo.
-
-##**Problema de Regressão Linear**
-Para um problema de regressão linear comum, precisamos encontrar a melhor reta de equação $$y_i = ax_i + b$$
-e precisamos dos melhores parâmetros a e b que faça a reta ficar mais ajustável aos dados.
-Usando agora a função custo aplicada a esse modelo, temos
+The minimization is performed through gradient descent, which updates parameters iteratively according to
 
 $$
-J = \frac{ \sum_{i = 0}^{N}(y_i - f(x_i,a,b))^2}{N}
+z_i^{(k+1)} = z_i^{(k)} - \mu \nabla_{z_i} J
 $$
 
-Calculando o gradiente
+where:
+
+- $k$ denotes the iteration (or epoch),
+- $\mu$ is the learning rate,
+- $\nabla_{z_i} J$ is the partial derivative of the cost with respect to parameter $z_i$.
+
+The negative sign reflects the minimization objective, ensuring movement in the direction of steepest descent.
+
+---
+
+# Linear Regression
+
+In the case of simple linear regression, the model is defined as
 
 $$
-\nabla J_{a} = \frac{\partial }{\partial a}\frac{ \sum_{i = 0}^{N}(y_i - f(x_i,a,b))^2}{N}
+f(x_i) = a x_i + b
 $$
 
-Utilizando que a derivada da soma é a soma das derivadas, temos
+The goal is to determine parameters $a$ and $b$ that minimize
 
 $$
-∇J_{a} =\frac{1}{N} \cdot \sum_{i = 0}^{N} \frac{\partial }{\partial a}(y_i - f(x_i,a,b))^2
+J(a,b) = \frac{1}{N} \sum_{i=1}^{N} 
+\left( y_i - (a x_i + b) \right)^2
 $$
 
-E agora utilizando a regra da cadeia
+## Gradient Computation
+
+The partial derivative with respect to $a$ is:
 
 $$
-∇J_{a} =\frac{1}{N} \cdot \sum_{i = 0}^{N} 2\cdot (y_i - f(x_i,a,b))\cdot (-\frac{\partial }{\partial a}f(x_i,a,b))
+\nabla_a J =
+\frac{\partial}{\partial a}
+\left(
+\frac{1}{N}
+\sum_{i=1}^{N}
+(y_i - (a x_i + b))^2
+\right)
 $$
 
-Então agora calculando a derivada da equação da reta, temos
+Applying linearity of differentiation and the chain rule:
 
 $$
-\nabla J_{a} = -\frac{2}{N}\sum_{i = 0}^{N} x_i (y_i - f(x_i,a,b))
+\nabla_a J =
+-\frac{2}{N}
+\sum_{i=1}^{N}
+x_i \left( y_i - (a x_i + b) \right)
 $$
 
-Fazendo o mesmo procedimento para a derivada em relação a $b$
+Similarly, for $b$:
 
 $$
-∇J_{b} = \frac{\partial }{\partial b}\frac{ \sum_{i = 0}^{N}(y_i - f(x_i,a,b))^2}{N}
+\nabla_b J =
+-\frac{2}{N}
+\sum_{i=1}^{N}
+\left( y_i - (a x_i + b) \right)
 $$
 
-temos
+## Parameter Update Rule
 
-$$
-∇J_{b} =\frac{1}{N} \cdot \sum_{i = 0}^{N} \frac{\partial }{\partial b}(y_i - f(x_i,a,b))^2
-$$
-
-$$
-\frac{1}{N} \cdot \sum_{i = 0}^{N} 2\cdot (y_i - f(x_i,a,b))\cdot (-\frac{\partial }{\partial b}f(x_i,a,b))
-$$
-
-e finalmente temos
-
-$$
--\frac{2}{N} \cdot \sum_{i = 0}^{N}(y_i - f(x_i,a,b))
-$$
-
-Igualando a zero
-
-
-$$
-\begin{cases}
-\nabla J_{a} = -\frac{2}{N}\sum_{i = 0}^{N} x_i (y_i - f(x_i,a,b)) = 0 \\
-\nabla J_{b} = -\frac{2}{N} \cdot \sum_{i = 0}^{N}(y_i - f(x_i,a,b)) = 0
-\end{cases}
-$$
-
-Agora montando o algorítmo da rede neural, ficamos com
-$$
-\begin{cases}
-\ a_{n+1} = a_{n} - \mu \nabla J_{a} \\
-\ b_{n+1} = b_{n} - \mu \nabla J_{b}
-\end{cases}
-$$
-
-
-
-#**Regressão linear múltiplas**
-A extensão do modelo linear para multiplas dimensões permite mapear pontos experimentais de um certo experimento físico, através de um modelo, nesse caso linear.
-Considere agora o seguinte problema onde temos várias entradas $x_{ij}$  em um sistema, e também os pontos de saída $y_i$, então
-
-$$
-(x_{11},x_{12},x_{13},x_{14},...,x_{1M}) \rightarrow y_1
-$$
-
-$$
-y_i = \sum_{j = 1}^{M}w_j \cdot x_{ij}  + θ
-$$
-
-onde $w_j$ são os pesos de cada variável e o termo $\theta$ é conhecido como bias.
-
-e queremos obter um modelo linear para $y_i$ em função das M variáveis do problema
-
-$$
-f(x_{i1},x_{i2},...,x_{iM}) = y_i
-$$
-
-Utilizando como função de custo o erro médio quadrático mais uma vez, temos
-
-$$
-MSE = \frac{ \sum_{i = 0}^{N}(y_i - f(x_{i1},x_{i2},...,x_{iM}))^2}{N}
-$$
-
-porém o modelo depende mesmo é dos pesos e do bias, sendo assim, uma vez que os dados são fixos, podemos alterar a dependência da função para os parâmetros de peso e bias
-
-$$
-J(w_1,w_2,w_3,...,w_M) = \frac{ \sum_{i = 0}^{N}(y_i - f(\theta,w_1,w_2,w_3,...,w_M))^2}{N}
-$$
-
-para obter a minimização do erro e ajustar os parâmetros do modelo, ao mesmo tempo, achamos o seu gradiente em relação aos parâmetros do modelo
-
-$$
-∇J(w_1,w_2,w_3,...,w_M) = ∇\frac{ \sum_{i = 0}^{N}(y_i - f(\theta,w_1,w_2,w_3,...,w_M))^2}{N}
-$$
-
-e os parâmetros podem ser estimados iterativamente, como segue pela equação abaixo
+The gradient descent updates are therefore:
 
 $$
 \begin{cases}
-  w_i^{k+1} = w_i^{k} - μ∇J_{w_i} \\
-  \theta^{k+1} = \theta^{k} - μ∇J_{\theta}
+a^{(k+1)} = a^{(k)} - \mu \nabla_a J \\
+b^{(k+1)} = b^{(k)} - \mu \nabla_b J
 \end{cases}
 $$
 
+These equations define the iterative learning dynamics of the linear model.
 
+---
 
-Onde k é a $k$-ésima iteração e i é o $i$-ésimo peso.
+# Multiple Linear Regression
 
-O sinal de $-$ significa um problema de minimização de uma função de custo, e essa equação pode ser enxergada como um aprendizado supervisionado de um parâmetro de um certo modelo, de acordo com a $k$-ésima época(ou geração) de evolução do algorítmo.
-
-
-##**Problema de Regressão Linear com M variáveis**
-Para um problema de regressão linear multivariável, precisamos do modelo que melhor ajuste a equação do $ℜ^n$ dada por $$\sum_{j = 1}^{M}w_j \cdot x_{ij}  + θ$$ , e precisamos dos melhores parâmetros $\vec{w}$ e $\theta$ que faça o ajuste.
-Para o caso multidimensional, a maximização é feita calculando o gradiente em relação a cada um dos pesos, e ao bias, como segue
+The linear model can be extended to multiple input variables. Suppose each observation is represented by a vector:
 
 $$
-J = \frac{ \sum_{i = 0}^{N}(y_i - (\sum_{j = 1}^{M}w_j \cdot x_{ij}  + θ) )^2}{N}
+\mathbf{x}_i = (x_{i1}, x_{i2}, \dots, x_{iM})
 $$
 
-Calculando o gradiente em relação a um k-ésimo coeficiente
+The model becomes:
 
 $$
-∇J_{w_k} = \frac{\partial }{\partial w_k}\frac{ \sum_{i = 0}^{N}(y_i - (\sum_{j = 1}^{M} w_j \cdot x_{ij}  + θ))^2}{N}
+f(\mathbf{x}_i) =
+\sum_{j=1}^{M} w_j x_{ij} + \theta
 $$
 
-Utilizando que a derivada da soma é a soma das derivadas, temos
+where:
+
+- $w_j$ are the weights,
+- $\theta$ is the bias term.
+
+The cost function is:
 
 $$
-∇J_{w_k} = \frac{1}{N} \cdot \sum_{i = 0}^{N} \frac{\partial }{\partial w_k}(y_i - (\sum_{j = 1}^{M}w_j \cdot x_{ij}  + θ))^2
+J(\mathbf{w}, \theta) =
+\frac{1}{N}
+\sum_{i=1}^{N}
+\left(
+y_i -
+\left(
+\sum_{j=1}^{M} w_j x_{ij} + \theta
+\right)
+\right)^2
 $$
 
-E agora utilizando a regra da cadeia
+---
+
+## Gradient with Respect to the Weights
+
+For a given weight $w_k$:
 
 $$
-∇J_{w_k} = \frac{1}{N} \cdot \sum_{i = 0}^{N} 2\cdot (y_i - (\sum_{j = 1}^{M}w_j \cdot x_{ij}  + θ)) \cdot (-\frac{\partial }{\partial w_k} (\sum_{j = 1}^{M}w_j \cdot x_{ij}  + θ))
+\nabla_{w_k} J =
+-\frac{2}{N}
+\sum_{i=1}^{N}
+x_{ik}
+\left(
+y_i -
+\left(
+\sum_{j=1}^{M} w_j x_{ij} + \theta
+\right)
+\right)
 $$
 
-Então agora calculando a derivada do modelo com respeito à um $k$-ésimo coeficiente, temos
+## Gradient with Respect to the Bias
 
 $$
-\nabla J_{w_k} = -\frac{1}{N} \cdot \sum_{i = 0}^{N} 2\cdot (y_i - (\sum_{j = 1}^{M}w_j \cdot x_{ij}  + θ)) \cdot \frac{\partial }{\partial w_k} (\sum_{j = 1}^{M}w_j \cdot x_{ij}  + θ)
+\nabla_{\theta} J =
+-\frac{2}{N}
+\sum_{i=1}^{N}
+\left(
+y_i -
+\left(
+\sum_{j=1}^{M} w_j x_{ij} + \theta
+\right)
+\right)
 $$
 
-e temos que
+---
 
-$$
-\frac{\partial }{\partial w_k} (\sum_{j = 1}^{M}w_j \cdot x_{ij}  + θ) = x_{ik}
-$$
+## Iterative Learning Rule
 
-então finalmente obtemos
-
-$$
-\nabla J_{w_k} = -\frac{2}{N} \cdot \sum_{i = 0}^{N} x_{ik}(y_i - (\sum_{j = 1}^{M}w_j \cdot x_{ij}  + θ))
-$$
-
-e em relação ao bias temos algo similar
-
-$$
-∇J_{\theta} = \frac{\partial }{\partial \theta}\frac{ \sum_{i = 0}^{N}(y_i - (\sum_{j = 1}^{M} w_j \cdot x_{ij}  + θ))^2}{N}
-$$
-
-desenvolvendo, temos
-
-$$
-\nabla J_{\theta} = -\frac{2}{N} \cdot \sum_{i = 0}^{N} (y_i - (\sum_{j = 1}^{M}w_j \cdot x_{ij}  + θ)) \cdot \frac{\partial }{\partial \theta} (\sum_{j = 1}^{M}w_j \cdot x_{ij}  + θ) = -\frac{2}{N} \cdot \sum_{i = 0}^{N} (y_i - (\sum_{j = 1}^{M}w_j \cdot x_{ij}  + θ))
-$$
-
-
-finalmente temos as equações do gradiente
+The parameter updates are given by:
 
 $$
 \begin{cases}
-\nabla J_{w_k} =-\frac{2}{N} \cdot \sum_{i = 0}^{N} x_{ik}(y_i - (\sum_{j = 1}^{M}w_j \cdot x_{ij}  + θ)) \\
-\nabla J_{\theta} = -\frac{2}{N} \cdot \sum_{i = 0}^{N} (y_i - (\sum_{j = 1}^{M}w_j \cdot x_{ij}  + θ))
+w_k^{(n+1)} = w_k^{(n)} - \mu \nabla_{w_k} J \\
+\theta^{(n+1)} = \theta^{(n)} - \mu \nabla_{\theta} J
 \end{cases}
 $$
 
-Agora montando o algorítmo da rede neural, ficamos com
-$$
-\begin{cases}
-w_k^{n+1} = w_k^{n} - μ\nabla J_{w_k} \\
-\theta^{n+1} = \theta^{n} - \mu \nabla J_{\theta}
-\end{cases}
-$$
+where:
 
+- $n$ denotes the iteration index,
+- $k$ identifies the corresponding weight.
 
-
-
-
-
+These equations characterize the supervised learning process for the multivariable linear regression model under gradient descent optimization.
